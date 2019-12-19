@@ -8,128 +8,104 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Recycle stores wheel items to reuse. 
+ * @author Freak
+ * @date 2019/12/19.
  */
 public class WheelRecycle {
-	// Cached items
-	private List<View> items;
-	
-	// Cached empty items
-	private List<View> emptyItems;
-	
-	// Wheel view
-	private WheelView wheel;
-	
-	/**
-	 * Constructor
-	 * @param wheel the wheel view
-	 */
-	public WheelRecycle(WheelView wheel) {
-		this.wheel = wheel;
-	}
+    // 缓存 items
+    private List<View> items;
 
-	/**
-	 * Recycles items from specified layout.
-	 * There are saved only items not included to specified range.
-	 * All the cached items are removed from original layout.
-	 * 
-	 * @param layout the layout containing items to be cached
-	 * @param firstItem the number of first item in layout
-	 * @param range the range of current wheel items 
-	 * @return the new value of first item number
-	 */
-	public int recycleItems(LinearLayout layout, int firstItem, ItemsRange range) {
-		int index = firstItem;
-		for (int i = 0; i < layout.getChildCount();) {
-			if (!range.contains(index)) {
-				recycleView(layout.getChildAt(i), index);
-				layout.removeViewAt(i);
-				if (i == 0) { // first item
-					firstItem++;
-				}
-			} else {
-				i++; // go to next item
-			}
-			index++;
-		}
-		return firstItem;
-	}
-	
-	/**
-	 * Gets item view
-	 * @return the cached view
-	 */
-	public View getItem() {
-		return getCachedView(items);
-	}
+    // 缓存空 items
+    private List<View> emptyItems;
 
-	/**
-	 * Gets empty item view
-	 * @return the cached empty view
-	 */
-	public View getEmptyItem() {
-		return getCachedView(emptyItems);
-	}
-	
-	/**
-	 * Clears all views 
-	 */
-	public void clearAll() {
-		if (items != null) {
-			items.clear();
-		}
-		if (emptyItems != null) {
-			emptyItems.clear();
-		}
-	}
+    // Wheel view
+    private WheelView wheel;
 
-	/**
-	 * Adds view to specified cache. Creates a cache list if it is null.
-	 * @param view the view to be cached
-	 * @param cache the cache list
-	 * @return the cache list
-	 */
-	private List<View> addView(View view, List<View> cache) {
-		if (cache == null) {
-			cache = new LinkedList<View>();
-		}
-		
-		cache.add(view);
-		return cache;
-	}
+    public WheelRecycle(WheelView wheel) {
+        this.wheel = wheel;
+    }
 
-	/**
-	 * Adds view to cache. Determines view type (item view or empty one) by index.
-	 * @param view the view to be cached
-	 * @param index the index of view
-	 */
-	private void recycleView(View view, int index) {
-		int count = wheel.getViewAdapter().getItemsCount();
+    /**
+     * 从特定布局回收的物品。
+     * 仅保存未包括在指定范围内的item。
+     * 所有缓存的item将从原始布局中删除。
+     *
+     * @param layout    包含要缓存item的layout
+     * @param firstItem 布局中第一项的数量
+     * @param range     当前item的范围
+     * @return 返回第一个item编号的新值
+     */
+    public int recycleItems(LinearLayout layout, int firstItem, ItemsRange range) {
+        int index = firstItem;
+        for (int i = 0; i < layout.getChildCount(); ) {
+            if (!range.contains(index)) {
+                recycleView(layout.getChildAt(i), index);
+                layout.removeViewAt(i);
+                if (i == 0) { // first item
+                    firstItem++;
+                }
+            } else {
+                i++; // go to next item
+            }
+            index++;
+        }
+        return firstItem;
+    }
 
-		if ((index < 0 || index >= count) && !wheel.isCyclic()) {
-			// empty view
-			emptyItems = addView(view, emptyItems);
-		} else {
-			while (index < 0) {
-				index = count + index;
-			}
-			index %= count;
-			items = addView(view, items);
-		}
-	}
-	
-	/**
-	 * Gets view from specified cache.
-	 * @param cache the cache
-	 * @return the first view from cache.
-	 */
-	private View getCachedView(List<View> cache) {
-		if (cache != null && cache.size() > 0) {
-			View view = cache.get(0);
-			cache.remove(0);
-			return view;
-		}
-		return null;
-	}
+
+    public View getItem() {
+        return getCachedView(items);
+    }
+
+
+    public View getEmptyItem() {
+        return getCachedView(emptyItems);
+    }
+
+
+    public void clearAll() {
+        if (items != null) {
+            items.clear();
+        }
+        if (emptyItems != null) {
+            emptyItems.clear();
+        }
+    }
+
+
+    private List<View> addView(View view, List<View> cache) {
+        if (cache == null) {
+            cache = new LinkedList<View>();
+        }
+
+        cache.add(view);
+        return cache;
+    }
+
+
+    private void recycleView(View view, int index) {
+        int count = wheel.getViewAdapter().getItemsCount();
+
+        if ((index < 0 || index >= count) && !wheel.isCyclic()) {
+            // empty view
+            emptyItems = addView(view, emptyItems);
+        } else {
+            while (index < 0) {
+                index = count + index;
+            }
+            index %= count;
+            items = addView(view, items);
+        }
+    }
+
+
+    private View getCachedView(List<View> cache) {
+        if (cache != null && cache.size() > 0) {
+            View view = cache.get(0);
+            cache.remove(0);
+            return view;
+        }
+        return null;
+    }
 
 }

@@ -6,44 +6,47 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Wheel items adapter interface
+ * @author Freak
+ * @date 2019/12/19.
  */
 public interface WheelViewAdapter {
-	/**
-	 * Gets items count
-	 * @return the count of wheel items
-	 */
-	public int getItemsCount();
-	
-	/**
-	 * Get a View that displays the data at the specified position in the data set
-	 * 
-	 * @param index the item index
-	 * @param convertView the old view to reuse if possible
-	 * @param parent the parent that this view will eventually be attached to
-	 * @return the wheel item View
-	 */
-	public View getItem(int index, View convertView, ViewGroup parent);
+    /**
+     * 获取item数量
+     *
+     * @return
+     */
+    int getItemsCount();
 
-	/**
-	 * Get a View that displays an empty wheel item placed before the first or after
-	 * the last wheel item.
-	 * 
-	 * @param convertView the old view to reuse if possible
-     * @param parent the parent that this view will eventually be attached to
-	 * @return the empty item View
-	 */
-	public View getEmptyItem(View convertView, ViewGroup parent);
-	
-	/**
-	 * Register an observer that is called when changes happen to the data used by this adapter.
-	 * @param observer the observer to be registered
-	 */
-	public void registerDataSetObserver(DataSetObserver observer);
-	
-	/**
-	 * Unregister an observer that has previously been registered
-	 * @param observer the observer to be unregistered
-	 */
-	void unregisterDataSetObserver(DataSetObserver observer);
+    /**
+     * 获取指定的item
+     *
+     * @param index       索引值
+     * @param convertView 尽可能重用的旧视图
+     * @param parent      parent
+     * @return
+     */
+    View getItem(int index, View convertView, ViewGroup parent);
+
+    /**
+     * 获取一个视图，该视图显示一个空的车轮项目，该项目位于第一个或最后一个车轮项目之前或之后。
+     *
+     * @param convertView 尽可能重用的旧视图
+     * @param parent      该视图最终将附加到的parent
+     * @return the empty item View
+     */
+    View getEmptyItem(View convertView, ViewGroup parent);
+
+    /**
+     * 注册观察者
+     *
+     * @param observer DataSetObserver
+     */
+    void registerDataSetObserver(DataSetObserver observer);
+
+    /**
+     * 解绑观察者
+     *
+     * @param observer DataSetObserver
+     */
+    void unregisterDataSetObserver(DataSetObserver observer);
 }

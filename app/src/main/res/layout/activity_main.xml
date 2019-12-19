@@ -1,49 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="275pt"
+        android:layout_height="153pt"
+        android:layout_marginTop="6pt"
+        android:background="@mipmap/ic_icon_my_lottery_tiger"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
 
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout_prize_wait_start"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <com.freak.lottery.widget.WheelView
                 android:id="@+id/dialog_slot_1"
-                android:layout_width="130pt"
-                android:layout_height="80pt"
-                android:layout_marginTop="78pt" />
-
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="31pt"
+                android:layout_marginTop="31pt"
+                android:layout_marginBottom="28pt"
+                android:background="@mipmap/ic_icon_0"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/dialog_slot_2"/>
             <com.freak.lottery.widget.WheelView
                 android:id="@+id/dialog_slot_2"
-                android:layout_width="128pt"
-                android:layout_height="80pt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="2pt"
-                android:layout_marginTop="78pt" />
+                android:layout_marginTop="31pt"
+                android:layout_marginBottom="28pt"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@+id/dialog_slot_1"
+                app:layout_constraintRight_toLeftOf="@+id/dialog_slot_3" />
 
             <com.freak.lottery.widget.WheelView
                 android:id="@+id/dialog_slot_3"
-                android:layout_width="128pt"
-                android:layout_height="80pt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="2pt"
-                android:layout_marginTop="78pt" />
+                android:layout_marginTop="31pt"
+                android:layout_marginBottom="28pt"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@+id/dialog_slot_2"
+                app:layout_constraintRight_toLeftOf="@+id/dialog_slot_4"  />
 
+            <com.freak.lottery.widget.WheelView
+                android:id="@+id/dialog_slot_4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2pt"
+                android:layout_marginTop="31pt"
+                android:layout_marginRight="27pt"
+                android:layout_marginBottom="28pt"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@+id/dialog_slot_3"
+                app:layout_constraintRight_toRightOf="parent"  />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
-    </RelativeLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="开始"/>
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="开始1"/>
 </LinearLayout>

@@ -4,51 +4,40 @@ package com.freak.lottery.adapters;
 import android.content.Context;
 
 /**
- * Numeric Wheel adapter.
+ * @author Freak
+ * @date 2019/12/19.
  */
 public class NumericWheelAdapter extends AbstractWheelTextAdapter {
-    
-    /** The default min value */
+
+    /**
+     * 默认的最大值
+     */
     public static final int DEFAULT_MAX_VALUE = 9;
 
-    /** The default max value */
+    /**
+     * 默认的最小值
+     */
     private static final int DEFAULT_MIN_VALUE = 0;
-    
+
     // Values
     private int minValue;
     private int maxValue;
-    
+
     // format
     private String format;
-    
-    /**
-     * Constructor
-     * @param context the current context
-     */
+
     public NumericWheelAdapter(Context context) {
         this(context, DEFAULT_MIN_VALUE, DEFAULT_MAX_VALUE);
     }
 
-    /**
-     * Constructor
-     * @param context the current context
-     * @param minValue the wheel min value
-     * @param maxValue the wheel max value
-     */
     public NumericWheelAdapter(Context context, int minValue, int maxValue) {
         this(context, minValue, maxValue, null);
     }
 
-    /**
-     * Constructor
-     * @param context the current context
-     * @param minValue the wheel min value
-     * @param maxValue the wheel max value
-     * @param format the format string
-     */
+
     public NumericWheelAdapter(Context context, int minValue, int maxValue, String format) {
         super(context);
-        
+
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.format = format;
@@ -66,5 +55,5 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
     @Override
     public int getItemsCount() {
         return maxValue - minValue + 1;
-    }    
+    }
 }

@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                     android:layout_width="wrap_content"
-                                     android:layout_height="wrap_content"
-                                     android:orientation="horizontal">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="98pt"
-        android:layout_height="125pt"
-        android:orientation="vertical">
-
-        <ImageView
-            android:src="@mipmap/ic_launcher"
-            android:id="@+id/iv_dialog_home_tiger"
-            android:layout_width="98pt"
-            android:layout_height="125pt"/>
-    </LinearLayout>
-
+    <ImageView
+        android:id="@+id/iv_dialog_home_tiger"
+        android:layout_width="52pt"
+        android:layout_height="95pt"
+        android:src="@mipmap/ic_icon_0" />
 
 </LinearLayout>

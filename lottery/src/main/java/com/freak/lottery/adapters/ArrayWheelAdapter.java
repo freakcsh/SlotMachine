@@ -4,19 +4,14 @@ package com.freak.lottery.adapters;
 import android.content.Context;
 
 /**
- * The simple Array wheel adapter
- * @param <T> the element type
+ * @author Freak
+ * @date 2019/12/19.
  */
 public class ArrayWheelAdapter<T> extends AbstractWheelTextAdapter {
     
     // items
     private T items[];
 
-    /**
-     * Constructor
-     * @param context the current context
-     * @param items the items
-     */
     public ArrayWheelAdapter(Context context, T items[]) {
         super(context);
         

@@ -1,8 +1,7 @@
 package com.freak.slotmachine;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -10,115 +9,78 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.freak.lottery.WheelManager;
 import com.freak.lottery.adapters.AbstractWheelAdapter;
 import com.freak.lottery.widget.OnWheelScrollListener;
 import com.freak.lottery.widget.WheelView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
 
     private Button button;
+    private Button button1;
+    private WheelView wheelView;
+    private WheelView wheelView1;
+    private WheelView wheelView2;
+    private WheelView wheelView3;
+    private List<WheelView> list;
+    private List<Integer> roundList;
+    private List<Integer> timeList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         button = findViewById(R.id.button);
-        initWheel(R.id.dialog_slot_1);
-        initWheel(R.id.dialog_slot_2);
-        initWheel(R.id.dialog_slot_3);
+        button1 = findViewById(R.id.button1);
+        wheelView = findViewById(R.id.dialog_slot_1);
+        wheelView1 = findViewById(R.id.dialog_slot_2);
+        wheelView2 = findViewById(R.id.dialog_slot_3);
+        wheelView3 = findViewById(R.id.dialog_slot_4);
+        list = new ArrayList<>();
+        roundList = new ArrayList<>();
+        timeList = new ArrayList<>();
+        roundList.add(50);
+        roundList.add(70);
+        roundList.add(90);
+        roundList.add(110);
+        timeList.add(2000);
+        timeList.add(3000);
+        timeList.add(5000);
+        timeList.add(7000);
+        list.add(wheelView);
+        list.add(wheelView1);
+        list.add(wheelView2);
+        list.add(wheelView3);
+        WheelManager.getInstance().initWheel(new SlotMachineAdapter(), list, 1, wheelView3, true, false, false, new OnWheelScrollListener() {
+            @Override
+            public void onScrollingStarted(WheelView wheel) {
+                Log.e("TAG", "开始滚动");
+            }
+
+            @Override
+            public void onScrollingFinished(WheelView wheel) {
+                Log.e("TAG", "滚动结束");
+            }
+        });
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startScrool(911);
-//                handler.sendEmptyMessageDelayed(10, 1000);
+                WheelManager.getInstance().start("96573", list, roundList, timeList);
             }
         });
-    }
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WheelManager.getInstance().start("4100", list, roundList, timeList);
 
-    /**
-     * 初始化轮子
-     *
-     * @param id the wheel widget Id
-     */
-    private void initWheel(int id) {
-        WheelView wheel = getWheel(id);
-        wheel.setViewAdapter(new SlotMachineAdapter());
-        wheel.setVisibleItems(3);
-        if (id == R.id.dialog_slot_3) {
-            wheel.addScrollingListener(scrolledListener);
-        }
-        wheel.setCyclic(true);
-        wheel.setEnabled(false);
-        wheel.setDrawShadows(false);
-    }
-
-    //车轮滚动的监听器
-    OnWheelScrollListener scrolledListener = new OnWheelScrollListener() {
-        public void onScrollingStarted(WheelView wheel) {
-        }
-
-        public void onScrollingFinished(WheelView wheel) {
-
-        }
-    };
-
-    public void startScrool(Integer num) {
-        String numString = num.toString();
-        int length = numString.length();
-        if (length == 1) {
-            mixWheel(R.id.dialog_slot_1, 50, 2000);
-            mixWheel(R.id.dialog_slot_2, 70, 3000);
-            mixWheel(R.id.dialog_slot_3, 90 + num, 5000);
-        } else if (length == 2) {
-            mixWheel(R.id.dialog_slot_1, 50, 2000);
-            char c = numString.charAt(0);
-            int firstNum = Integer.parseInt(String.valueOf(c));
-            mixWheel(R.id.dialog_slot_2, 70 + firstNum, 3000);
-            char c1 = numString.charAt(1);
-            int secondNum = Integer.parseInt(String.valueOf(c1));
-            mixWheel(R.id.dialog_slot_3, 90 + secondNum, 5000);
-        } else if (length == 3) {
-            char c = numString.charAt(0);
-            int firstNum = Integer.parseInt(String.valueOf(c));
-            mixWheel(R.id.dialog_slot_1, 50 + firstNum, 2000);
-            char c1 = numString.charAt(1);
-            int secondNum = Integer.parseInt(String.valueOf(c1));
-            mixWheel(R.id.dialog_slot_2, 70 + secondNum, 3000);
-            char c2 = numString.charAt(2);
-            int thirdNum = Integer.parseInt(String.valueOf(c2));
-            mixWheel(R.id.dialog_slot_3, 90 + secondNum, 5000);
-        }
-    }
-
-
-    /**
-     * 转动轮子
-     *
-     * @param id the wheel id
-     */
-    private void mixWheel(int id, int round, int time) {
-        WheelView wheel = getWheel(id);
-        wheel.scroll(round, time);
-    }
-
-
-    /**
-     * 根据id获取轮子
-     *
-     * @param id the wheel Id
-     * @return the wheel with passed Id
-     */
-    private WheelView getWheel(int id) {
-        WheelView wheelView = (WheelView) findViewById(id);
-        return wheelView;
+            }
+        });
     }
 
 
@@ -142,45 +104,35 @@ public class MainActivity extends AppCompatActivity {
             ImageView img = (ImageView) view.findViewById(R.id.iv_dialog_home_tiger);
             switch (index) {
                 case 0:
-                    img.setImageResource(R.mipmap.png0);
+                    img.setImageResource(R.mipmap.ic_icon_0);
                     break;
-
                 case 1:
-                    img.setImageResource(R.mipmap.png1);
+                    img.setImageResource(R.mipmap.ic_icon_1);
                     break;
-
                 case 2:
-                    img.setImageResource(R.mipmap.png2);
+                    img.setImageResource(R.mipmap.ic_icon_2);
                     break;
-
                 case 3:
-                    img.setImageResource(R.mipmap.png3);
+                    img.setImageResource(R.mipmap.ic_icon_3);
                     break;
-
                 case 4:
-                    img.setImageResource(R.mipmap.png4);
+                    img.setImageResource(R.mipmap.ic_icon_4);
                     break;
-
                 case 5:
-                    img.setImageResource(R.mipmap.png5);
+                    img.setImageResource(R.mipmap.ic_icon_5);
                     break;
-
                 case 6:
-                    img.setImageResource(R.mipmap.png6);
+                    img.setImageResource(R.mipmap.ic_icon_6);
                     break;
-
                 case 7:
-                    img.setImageResource(R.mipmap.png7);
+                    img.setImageResource(R.mipmap.ic_icon_7);
                     break;
-
                 case 8:
-                    img.setImageResource(R.mipmap.png8);
+                    img.setImageResource(R.mipmap.ic_icon_8);
                     break;
-
                 case 9:
-                    img.setImageResource(R.mipmap.png9);
+                    img.setImageResource(R.mipmap.ic_icon_9);
                     break;
-
             }
 
             return view;

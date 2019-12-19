@@ -1,6 +1,7 @@
 
 package com.freak.lottery.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -11,48 +12,50 @@ import android.view.animation.Interpolator;
 import android.widget.Scroller;
 
 /**
- * Scroller class handles scrolling events and updates the 
+ * 处理滚动事件
+ *
+ * @author Freak
+ * @date 2019/12/19.
  */
 public class WheelScroller {
-    /**
-     * Scrolling listener interface
-     */
     public interface ScrollingListener {
         /**
-         * Scrolling callback called when scrolling is performed.
-         * @param distance the distance to scroll
+         * 正在滚动
+         *
+         * @param distance 滚动距离
          */
         void onScroll(int distance);
 
         /**
-         * Starting callback called when scrolling is started
+         * 开始滚动
          */
         void onStarted();
-        
+
         /**
-         * Finishing callback called after justifying
+         * 滚动结束 在调用onJustify()完成后才会回调
          */
         void onFinished();
-        
+
         /**
-         * Justifying callback called to justify a view when scrolling is ended
+         * 滚动结束时，调用justify回调来对齐视图
          */
         void onJustify();
     }
-    
-    /** Scrolling duration */
+
+    /**
+     * 滚动事件
+     */
     private static final int SCROLLING_DURATION = 400;
 
-    /** Minimum delta for scrolling */
+    /**
+     * 最小的滚动增量
+     */
     public static final int MIN_DELTA_FOR_SCROLLING = 1;
 
-    // Listener
     private ScrollingListener listener;
-    
-    // Context
+
     private Context context;
-    
-    // Scrolling
+
     private GestureDetector gestureDetector;
     private Scroller scroller;
     private int lastScrollY;
@@ -60,55 +63,58 @@ public class WheelScroller {
     private boolean isScrollingPerformed;
 
     /**
-     * Constructor
-     * @param context the current context
-     * @param listener the scrolling listener
+     * @param context  context
+     * @param listener ScrollingListener
      */
     public WheelScroller(Context context, ScrollingListener listener) {
         gestureDetector = new GestureDetector(context, gestureListener);
         gestureDetector.setIsLongpressEnabled(false);
-        
+
         scroller = new Scroller(context);
 
         this.listener = listener;
         this.context = context;
     }
-    
+
     /**
-     * Set the the specified scrolling interpolator
-     * @param interpolator the interpolator
+     * 设置Interpolator
+     * 插值器定义动画的变化率。 这允许基本的动画效果（alpha，缩放，平移，旋转）被加速，减速，重复等。
+     *
+     * @param interpolator interpolator
      */
     public void setInterpolator(Interpolator interpolator) {
         scroller.forceFinished(true);
         scroller = new Scroller(context, interpolator);
     }
-    
+
     /**
-     * Scroll the wheel
-     * @param distance the scrolling distance
-     * @param time the scrolling duration
+     * 滚动
+     *
+     * @param distance 滚动距离
+     * @param time     滚动持续时间
      */
     public void scroll(int distance, int time) {
         scroller.forceFinished(true);
 
         lastScrollY = 0;
-        
+
         scroller.startScroll(0, 0, 0, distance, time != 0 ? time : SCROLLING_DURATION);
         setNextMessage(MESSAGE_SCROLL);
-        
+
         startScrolling();
     }
-   
+
     /**
-     * Stops scrolling
+     * 停止滚动
      */
     public void stopScrolling() {
         scroller.forceFinished(true);
     }
-    
+
     /**
-     * Handles Touch event 
-     * @param event the motion event
+     * 触摸时间
+     *
+     * @param event event
      * @return
      */
     public boolean onTouchEvent(MotionEvent event) {
@@ -118,10 +124,9 @@ public class WheelScroller {
                 scroller.forceFinished(true);
                 clearMessages();
                 break;
-    
+
             case MotionEvent.ACTION_MOVE:
-                // perform scrolling
-                int distanceY = (int)(event.getY() - lastTouchedY);
+                int distanceY = (int) (event.getY() - lastTouchedY);
                 if (distanceY != 0) {
                     startScrolling();
                     listener.onScroll(distanceY);
@@ -129,22 +134,21 @@ public class WheelScroller {
                 }
                 break;
         }
-        
+
         if (!gestureDetector.onTouchEvent(event) && event.getAction() == MotionEvent.ACTION_UP) {
             justify();
         }
 
         return true;
     }
-    
-    // gesture listener
+
+    // 手势监听器
     private SimpleOnGestureListener gestureListener = new SimpleOnGestureListener() {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            // Do scrolling in onTouchEvent() since onScroll() are not call immediately
-            //  when user touch and move the wheel
+            //请在onTouchEvent（）中滚动，因为当用户触摸并移动滚轮时不会立即调用onScroll（）
             return true;
         }
-        
+
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             lastScrollY = 0;
             final int maxY = 0x7FFFFFFF;
@@ -155,14 +159,13 @@ public class WheelScroller {
         }
     };
 
-    // Messages
     private final int MESSAGE_SCROLL = 0;
     private final int MESSAGE_JUSTIFY = 1;
-    
+
     /**
-     * Set next message to queue. Clears queue before.
-     * 
-     * @param message the message to set
+     * 将下一条消息设置为排队。 之前清除队列。
+     *
+     * @param message message
      */
     private void setNextMessage(int message) {
         clearMessages();
@@ -170,14 +173,15 @@ public class WheelScroller {
     }
 
     /**
-     * Clears messages from queue
+     * 清除消息
      */
     private void clearMessages() {
         animationHandler.removeMessages(MESSAGE_SCROLL);
         animationHandler.removeMessages(MESSAGE_JUSTIFY);
     }
-    
-    // animation handler
+
+    // 处理动画的 handler
+    @SuppressLint("HandlerLeak")
     private Handler animationHandler = new Handler() {
         public void handleMessage(Message msg) {
             scroller.computeScrollOffset();
@@ -187,9 +191,8 @@ public class WheelScroller {
             if (delta != 0) {
                 listener.onScroll(delta);
             }
-            
-            // scrolling is not finished when it comes to final Y
-            // so, finish it manually 
+
+            // 最终的Y滚动尚未完成，请手动完成
             if (Math.abs(currY - scroller.getFinalY()) < MIN_DELTA_FOR_SCROLLING) {
                 currY = scroller.getFinalY();
                 scroller.forceFinished(true);
@@ -203,9 +206,9 @@ public class WheelScroller {
             }
         }
     };
-    
+
     /**
-     * Justifies wheel
+     * 对齐 wheel
      */
     private void justify() {
         listener.onJustify();
@@ -213,7 +216,7 @@ public class WheelScroller {
     }
 
     /**
-     * Starts scrolling
+     * 开始滚动
      */
     private void startScrolling() {
         if (!isScrollingPerformed) {
@@ -223,9 +226,9 @@ public class WheelScroller {
     }
 
     /**
-     * Finishes scrolling
+     * 结束滚动
      */
-    void finishScrolling() {
+    private void finishScrolling() {
         if (isScrollingPerformed) {
             listener.onFinished();
             isScrollingPerformed = false;

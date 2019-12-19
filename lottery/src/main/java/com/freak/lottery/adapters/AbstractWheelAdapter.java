@@ -10,12 +10,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Abstract Wheel adapter.
+ * 滚轮适配器 可继承自定义
+ *
+ * @author Freak
+ * @date 2019/12/19.
  */
 public abstract class AbstractWheelAdapter implements WheelViewAdapter {
     // Observers
-    private List<DataSetObserver> datasetObservers;
-    
+    private List<DataSetObserver> dataSetObservers;
+
     @Override
     public View getEmptyItem(View convertView, ViewGroup parent) {
         return null;
@@ -23,36 +26,36 @@ public abstract class AbstractWheelAdapter implements WheelViewAdapter {
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
-        if (datasetObservers == null) {
-            datasetObservers = new LinkedList<DataSetObserver>();
+        if (dataSetObservers == null) {
+            dataSetObservers = new LinkedList<DataSetObserver>();
         }
-        datasetObservers.add(observer);
+        dataSetObservers.add(observer);
     }
 
     @Override
     public void unregisterDataSetObserver(DataSetObserver observer) {
-        if (datasetObservers != null) {
-            datasetObservers.remove(observer);
+        if (dataSetObservers != null) {
+            dataSetObservers.remove(observer);
         }
     }
-    
+
     /**
-     * Notifies observers about data changing
+     * 通知观察者有关数据更改的信息
      */
     protected void notifyDataChangedEvent() {
-        if (datasetObservers != null) {
-            for (DataSetObserver observer : datasetObservers) {
+        if (dataSetObservers != null) {
+            for (DataSetObserver observer : dataSetObservers) {
                 observer.onChanged();
             }
         }
     }
-    
+
     /**
-     * Notifies observers about invalidating data
+     * 通知观察者有关数据无效的信息
      */
     protected void notifyDataInvalidatedEvent() {
-        if (datasetObservers != null) {
-            for (DataSetObserver observer : datasetObservers) {
+        if (dataSetObservers != null) {
+            for (DataSetObserver observer : dataSetObservers) {
                 observer.onInvalidated();
             }
         }
